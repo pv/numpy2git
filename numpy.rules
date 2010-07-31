@@ -11,24 +11,6 @@ create repository f2py-research
 end repository
 
 
-# Explicit pruning
-# ----------------
-
-# Prune weave
-
-match /trunk/weave/
-end match
-
-match /trunk/scipy/weave/
-end match
-
-match /branches/newcore/weave/
-end match
-
-match /branches/newcore/scipy/weave/
-end match
-
-
 # Trunks
 # ------
 
