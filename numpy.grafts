@@ -13,6 +13,8 @@
 # ---------				-----------
 
 # 1) Merges to trunk: these are *important* for preserving history
+#
+# Of split merge commits, only the *last* one is kept.
 
 trunk:7339				branches/datetime:7337
 trunk:6481				branches/coremath:6480
@@ -21,11 +23,11 @@ trunk:6360				branches/fix_float_format:6319
 trunk:6250				branches/fix_float_format:6249
 trunk:6235				branches/fix_float_format:6234
 trunk:6090				branches/ufunc_cleanup:5955
-trunk:6089				branches/ufunc_cleanup:5955
+# trunk:6089				branches/ufunc_cleanup:5955
 trunk:6078				branches/visualstudio_manifest:6077
-trunk:6026				branches/ufunc_cleanup:5955
-trunk:5981				branches/ufunc_cleanup:5955
-trunk:5976				branches/ufunc_cleanup:5955
+# trunk:6026				branches/ufunc_cleanup:5955
+# trunk:5981				branches/ufunc_cleanup:5955
+# trunk:5976				branches/ufunc_cleanup:5955
 trunk:5950				branches/gen_ufuncs:5675
 trunk:5913				branches/clean_math_config:5912
 trunk:5258				branches/cdavid:5210
