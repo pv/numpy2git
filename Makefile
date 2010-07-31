@@ -34,7 +34,6 @@ branchstat:
 
 postprocess:
 	./postprocess.sh numpy numpy.grafts
-	./branchstat.sh numpy
 
 final-cleanup:
 	cd numpy && git branch -D maintenance/1.1.x_5227
