@@ -65,6 +65,12 @@ match /branches/(1.5.x)/
     branch maintenance/\1
 end match
 
+match /branches/v0_3_2/
+  repository numpy
+  branch svntags/0.3.2
+end match
+
+
 # The rest of the branches.
 #
 # These will be removed in a post-processing step, but are kept here
@@ -109,6 +115,17 @@ match /tags/(v[^/]+)/
   repository numpy
   branch svntags/\1
 end match
+
+match /tags/beta-0.4.2/
+  repository numpy
+  branch svntags/0.4.2b1
+end match
+
+match /tags/release_0_2_0/
+  repository numpy
+  branch svntags/0.2.0
+end match
+
 
 # Rest of the tags are crud; but again remove them only in post-processing
 
