@@ -6,6 +6,8 @@ REPOBASE=`basename "$REPO"`
 GRAFTS="$2"
 GRAFT_ONLY="$3"
 LOG="$PWD/postprocess-$REPOBASE.log"
+COMMITLIST="$PWD/postprocess-$REPOBASE.commits"
+DROPLIST="$PWD/postprocess-$REPOBASE.dropped"
 
 if test -d "$REPO/.git"; then
     REPO="$REPO/.git"
@@ -83,15 +85,9 @@ if test "$GRAFT_ONLY" = "graft-only"; then
     exit 0;
 fi
 
-#
-# 2) Strip SVN metadata, and make the grafts permanent
-#
-
-run git filter-branch --msg-filter 'head -n-2' -- --all
-rm -f info/grafts
 
 #
-# 3) Remove crud branches
+# 2) Remove crud branches
 #
 
 for crud in `git branch|grep "^  crud/"`; do
@@ -99,7 +95,7 @@ for crud in `git branch|grep "^  crud/"`; do
 done
 
 #
-# 4) Convert SVN tag branches to real tags
+# 3) Convert SVN tag branches to real tags
 #
 
 for branch in `git branch|grep "^  svntags/"`; do
@@ -110,6 +106,30 @@ for branch in `git branch|grep "^  svntags/"`; do
 done
 
 #
-# 5) Collect garbage
+# 4) Collect garbage
 #
+MAX_REVISION=`git log --all | sed -n -e '/^    svn path/{s/.*revision=//;p}'|sort -n|tail -n1`
+
 run git prune
+
+
+#
+# 5) List the SVN commits that are left
+#
+
+git log --all | grep 'svn path' > "$COMMITLIST"
+> "$DROPLIST"
+
+(sed -e 's/.*=//' < "$COMMITLIST"; seq 1 $MAX_REVISION) \
+| sort -n | uniq -u > "$DROPLIST"
+
+cat "$DROPLIST" | while read REV; do
+    msg "$REV dropped"
+done
+
+#
+# 6) Strip SVN metadata, and make the grafts permanent
+#
+
+run git filter-branch --msg-filter 'head -n-2' -- --all
+rm -f info/grafts
