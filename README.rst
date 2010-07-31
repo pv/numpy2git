@@ -60,7 +60,7 @@ This entails a couple of things:
 3. Convert all branches under ``svntags/`` to real Git tags.
    The branches are removed, leaving only the tags.
 
-4. ``git prune`` is called to get rid of 
+4. ``git prune`` is called to get rid of unwanted stuff.
 
 5. We check which SVN commits didn't make it into the Git repo,
    and dump that information to ``postprocess-REPONAME.droplist``.
