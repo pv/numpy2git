@@ -16,7 +16,7 @@ help:
 all: clean export postprocess gc
 
 clean:
-	rm -rf numpy f2py-research vendor log-*
+	rm -rf numpy numpy.save f2py-research vendor log-*
 
 export:
 	svn-all-fast-export \
@@ -25,6 +25,8 @@ export:
 	  --add-metadata \
 	  $(SVN) \
 	2>&1 | tee log-numpy-export
+	rm -rf numpy.save
+	cp -a numpy numpy.save
 
 graft:
 	./postprocess.sh numpy numpy.grafts graft-only
