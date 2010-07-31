@@ -2,14 +2,16 @@ SVN=$(CURDIR)/../numpy-svn
 
 help:
 	@echo "Targets:"
+	@echo ""
 	@echo "  make clean"
-	@echo "  make export          -- svn-all-fast-export"
+	@echo "  make export SVN=...  -- svn-all-fast-export"
 	@echo "  make postprocess     -- postprocess"
 	@echo "  make final-cleanup   -- final cleanup"
 	@echo "  make gc              -- git-gc"
 	@echo ""
 	@echo "  make graft           -- (re-)do merge grafting"
 	@echo "  make branchstat      -- show branch status"
+	@echo ""
 
 all: clean export postprocess gc
 

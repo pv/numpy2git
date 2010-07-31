@@ -4,6 +4,16 @@ Numpy SVN to Git conversion
 We do Numpy SVN -> GIT conversion as listed below.
 
 All of this is driven by a Makefile, whose targets we list below.
+Quick usage:
+
+    svnsync http://...  numpy-svn
+    make all SVN=numpy-svn
+
+You also need an ``authors.map`` in the format
+
+    svnaccount          Real Name <real@email.foo>
+
+mapping SVN users to Git users.  (We don't add it into this repository.)
 
 
 export (step 1)
