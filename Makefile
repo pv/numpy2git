@@ -13,7 +13,7 @@ help:
 	@echo "  make branchstat      -- show branch status"
 	@echo ""
 
-all: clean export postprocess gc
+all: clean export postprocess final-cleanup gc
 
 clean:
 	rm -rf numpy numpy.save f2py-research vendor log-*
@@ -39,9 +39,11 @@ postprocess:
 	./postprocess.sh numpy numpy.grafts
 
 final-cleanup:
-	cd numpy && git branch -D maintenance/1.1.x_5227
-	cd numpy && git branch -D master_1460
+	mv numpy/refs/heads/maintenance/1.1.x_5227 \
+	   numpy/refs/heads/master_1460 \
+	   numpy/refs/svn/
 	cd numpy && git tag -d v0.9.6.2236
+	cd numpy && git tag -d v0.4.2b1.1250
 	cd numpy && git filter-branch --force --prune-empty \
 	 --index-filter 'git update-index --force-remove -- weave scipy/weave' \
 	 -- --all

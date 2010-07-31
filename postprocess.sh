@@ -10,7 +10,9 @@ COMMITLIST="$PWD/log-$REPOBASE-commits"
 DROPLIST="$PWD/log-$REPOBASE-dropped"
 
 if test -d "$REPO/.git"; then
-    REPO="$REPO/.git"
+    REPOGIT=".git"
+else
+    REPOGIT="."
 fi
 
 if test ! -d "$REPO"; then
@@ -45,8 +47,8 @@ msg() {
 # 1) Inject graft points for merges
 #
 
-rm -f info/grafts
-> info/grafts.new
+rm -f "$REPOGIT"/info/grafts
+> "$REPOGIT"/info/grafts.new
 
 cat "$GRAFTS" | while read BASE BRANCH; do
     if test -z "$BASE" -a -z "$BRANCH"; then
@@ -66,12 +68,14 @@ cat "$GRAFTS" | while read BASE BRANCH; do
 	msg "ERROR: Graft point <$BASE>:<$BRANCH> not found: <$BASE_HASH>:<$BRANCH_HASH>"
 	exit 123
     fi
-    BASE_PARENT_HASH=`git rev-parse $BASE_HASH^`
-    msg "Grafting $BRANCH -> $BASE"
-    #msg "    base: $BASE_HASH"
-    #msg "    parent: $BASE_PARENT_HASH"
-    #msg "    added parent: $BRANCH_HASH"
-    echo "$BASE_HASH $BASE_PARENT_HASH $BRANCH_HASH" >> info/grafts.new
+    BASE_PARENT_HASH=`git rev-parse $BASE_HASH^ 2>/dev/null || true`
+    if test "$BASE_PARENT_HASH" = "$BASE_HASH^"; then
+	msg "Reparenting: $BRANCH -> $BASE"
+	echo "$BASE_HASH $BRANCH_HASH" >> "$REPOGIT"/info/grafts.new
+    else
+	msg "Grafting $BRANCH -> $BASE"
+	echo "$BASE_HASH $BASE_PARENT_HASH $BRANCH_HASH" >> "$REPOGIT"/info/grafts.new
+    fi
 done
 
 if test "$?" = "123"; then
@@ -79,7 +83,7 @@ if test "$?" = "123"; then
     exit 1
 fi
 
-mv -f info/grafts.new info/grafts
+mv -f "$REPOGIT"/info/grafts.new "$REPOGIT"/info/grafts
 
 if test "$GRAFT_ONLY" = "graft-only"; then
     exit 0;
@@ -87,23 +91,30 @@ fi
 
 
 #
-# 2) Remove crud branches
+# 2) Hide crud branches
 #
+
+mkdir -p "$REPOGIT"/refs/svn
+mv "$REPOGIT"/refs/heads/crud/* "$REPOGIT"/refs/svn/
+rmdir "$REPOGIT"/refs/heads/crud
 
 for crud in `git branch|grep "^  crud/"`; do
     run git branch -D "$crud"
 done
 
 #
-# 3) Convert SVN tag branches to real tags
+# 3) Convert SVN tag branches to real tags, and hide the SVN branches
 #
 
 for branch in `git branch|grep "^  svntags/"`; do
     tag=`echo -n "$branch"|sed -e 's@svntags/v*@@'|sed -e 's/_/./g'`
     tag="v$tag"
     run git tag "$tag" "$branch"
-    run git branch -D "$branch"
 done
+
+mkdir -p "$REPOGIT"/refs/svn/svntags
+mv "$REPOGIT"/refs/heads/svntags/* "$REPOGIT"/refs/svn/svntags/
+rmdir "$REPOGIT"/refs/heads/svntags
 
 #
 # 4) Collect garbage

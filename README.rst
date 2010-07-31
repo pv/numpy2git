@@ -55,7 +55,14 @@ This entails a couple of things:
    ``.grafts`` file, and dumps that information to Git via the text
    file ``info/grafts``.
 
-2. Remove all branches under ``crud/``
+2. Hide all branches under ``crud/``.
+
+   This is done by relocating ``refs/heads/crud`` to ``refs/svn``.
+   This hides them from ``git branch``.
+
+   Such hidden refs can still be pushed and pulled, but they won't
+   come along automatically -- ``refs/svn/*:refs/svn/*`` needs to be
+   explicitly given to ``git push``.
 
 3. Convert all branches under ``svntags/`` to real Git tags.
    The branches are removed, leaving only the tags.
@@ -73,8 +80,8 @@ This entails a couple of things:
 final-cleanup (step 3)
 ----------------------
 
-We remove a couple of leftover branches and tags, and strip all
-Weave-related stuff out from Numpy.
+We move a couple of leftover branches and tags under ``refs/svn``, and
+strip all Weave-related stuff out from Numpy.
 
 gc (step 4)
 -----------
