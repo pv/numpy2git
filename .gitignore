@@ -1,0 +1,7 @@
+*~
+*.log
+*.bak
+/log-*
+/numpy
+/vendor
+/f2py-research

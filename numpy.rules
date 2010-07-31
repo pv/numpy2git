@@ -1,0 +1,141 @@
+# Repositories
+# ------------
+
+create repository numpy
+end repository
+
+create repository vendor
+end repository
+
+create repository f2py-research
+end repository
+
+
+# Explicit pruning
+# ----------------
+
+# Prune weave
+
+match /trunk/weave/
+end match
+
+match /trunk/scipy/weave/
+end match
+
+match /branches/newcore/weave/
+end match
+
+match /branches/newcore/scipy/weave/
+end match
+
+
+# Trunks
+# ------
+
+match /trunk/
+    repository numpy
+    branch master
+end match
+
+match /f2py-research/
+    repository f2py-research
+    branch master
+end match
+
+match /vendor/
+    repository vendor
+    branch master
+end match
+
+
+# Branches
+# --------
+
+# Release branches
+
+match /branches/(1.0.3.x)/
+    repository numpy
+    branch maintenance/\1
+end match
+
+match /branches/(1.1.x)/
+    repository numpy
+    branch maintenance/\1
+end match
+
+match /branches/(1.2.x)/
+    repository numpy
+    branch maintenance/\1
+end match
+
+match /branches/(1.3.x)/
+    repository numpy
+    branch maintenance/\1
+end match
+
+match /branches/(1.4.x)/
+    repository numpy
+    branch maintenance/\1
+end match
+
+match /branches/(1.5.x)/
+    repository numpy
+    branch maintenance/\1
+end match
+
+# The rest of the branches.
+#
+# These will be removed in a post-processing step, but are kept here
+# for preserving the history relevant for trunk
+
+match /branches/([^/]+)/
+    repository numpy
+    branch crud/\1
+end match
+
+
+# Extraneous root paths
+# ---------------------
+
+match /(numpy.sunperf)/
+    repository numpy
+    branch crud/\1
+end match
+
+match /(cleaned_math_config)/
+    repository numpy
+    branch crud/\1
+end match
+
+match /(numpy-docs)/
+    repository numpy
+    branch crud/\1
+end match
+
+match /trunk/(scipy_distutils)/
+    repository numpy
+    branch crud/\1
+end match
+
+
+# Tags
+# ----
+
+# Make SVN tags branches, and convert them to tags in a post-processing step
+
+match /tags/([0-9]+[^/]+)/
+  repository numpy
+  branch svntags/\1
+end match
+
+match /tags/(v[^/]+)/
+  repository numpy
+  branch svntags/\1
+end match
+
+# Rest of the tags are crud; but again remove them only in post-processing
+
+match /tags/([^/]+)/
+  repository numpy
+  branch crud/svntags/\1
+end match
