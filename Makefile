@@ -43,6 +43,7 @@ final-cleanup:
 	cd numpy && git filter-branch --force --prune-empty \
 	 --index-filter 'git update-index --force-remove -- weave scipy/weave' \
 	 -- --all
+	rm -rf numpy/refs/original
 
 gc:
 	cd numpy && git gc --aggressive
