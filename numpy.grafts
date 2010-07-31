@@ -45,6 +45,7 @@ trunk:4666				branches/lib_for_io:4665
 trunk:3823    				branches/distutils-revamp:3795
 trunk:2899				branches/ver1.0:2898
 trunk:2206				branches/power_optimization:2205
+trunk:2100				branches/newunicode:2091
 trunk:2080				branches/newunicode:2079
 trunk:1792				branches/numpy:1791
 trunk:1744				branches/fixsort:1743
