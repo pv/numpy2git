@@ -62,7 +62,7 @@ trunk:943				branches/numarray:942
 #    Some of these are important for history, too.
 
 branches/build_with_scons:4678		branches/cleanconfig_rtm:4638
-branches/clean_math_config:5736		cleaned_math_config:5734
+branches/clean_math_config:5756		cleaned_math_config:5734
 branches/distutils_scons_command:4639	branches/cleanconfig_rtm:4638
 branches/distutils_scons_command:4632	branches/cleanconfig_rtm:4631
 branches/numpy.scons:4219		branches/cleanconfig:4218
