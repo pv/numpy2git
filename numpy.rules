@@ -81,22 +81,17 @@ end match
 
 match /(numpy.sunperf)/
     repository numpy
-    branch crud/\1
+    branch crud/svnroot/\1
 end match
 
 match /(cleaned_math_config)/
     repository numpy
-    branch crud/\1
+    branch crud/svnroot/\1
 end match
 
 match /(numpy-docs)/
     repository numpy
-    branch crud/\1
-end match
-
-match /trunk/(scipy_distutils)/
-    repository numpy
-    branch crud/\1
+    branch crud/svnroot/\1
 end match
 
 
