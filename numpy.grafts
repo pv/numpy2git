@@ -128,3 +128,11 @@ branches/numpy.scons:4522		trunk:4518
 branches/numpy.scons:4521		trunk:4507
 branches/ver1.0:2907			trunk:2906
 branches/power_optimization:2205	trunk:2204
+
+
+# 4) Parenting
+#
+# svn-all-fast-export fails to supply parents for some branches.
+# We hand-graft them.
+
+branches/lib_for_io:4585		trunk:4579
