@@ -3,7 +3,7 @@
 #
 # The format is
 #
-#     <TO-BRANCH-NAME>:<MERGE-SVN-COMMIT> <FROM-BRANCH-NAME>:<SVN-COMMIT>
+#     <TO-BRANCH-NAME>:<MERGE-SVN-COMMIT> <FROM-BRANCH-NAME>:<LAST-SVN-COMMIT>
 #
 # The BRANCH-NAME should be a full path, e.g. "trunk", "branches/numarray",
 # and the SVN commit numbers are to be given without the 'r' prefix.
@@ -12,17 +12,24 @@
 # TO BRANCH				FROM BRANCH
 # ---------				-----------
 
-# 1) Merges to trunk: these are *important* for preserving history
+# 1) Branch-terminating merges. These are important for preserving history.
 #
-# Of split merge commits, only the *last* one is kept.
+# Of split merge commits from one branch point (`ufunc_cleanup`, I'm
+# looking at you), only the last one is kept.
+#
+# XXX: I wonder if the ufunc_cleanup branch actually was ever merged back?
+#      It doesn't seem to contain much?
 
 trunk:7339				branches/datetime:7337
+trunk:6984				branches/detect_capi_mismatch:6892
+trunk:6552				branches/dynamic_cpu_configuration:6369
 trunk:6481				branches/coremath:6480
 trunk:6441				branches/numpy-mingw-w64:6425
 trunk:6360				branches/fix_float_format:6319
 trunk:6250				branches/fix_float_format:6249
 trunk:6235				branches/fix_float_format:6234
 trunk:6090				branches/ufunc_cleanup:5955
+trunk:6096				numpy-docs:6096
 # trunk:6089				branches/ufunc_cleanup:5955
 trunk:6078				branches/visualstudio_manifest:6077
 # trunk:6026				branches/ufunc_cleanup:5955
@@ -31,6 +38,7 @@ trunk:6078				branches/visualstudio_manifest:6077
 trunk:5950				branches/gen_ufuncs:5675
 trunk:5913				branches/clean_math_config:5912
 trunk:5258				branches/cdavid:5210
+trunk:4807      			branches/maskedarray:4804
 trunk:4778      			branches/maskedarray:4777
 trunk:4773    				branches/build_with_scons:4772
 trunk:4666				branches/lib_for_io:4665
@@ -42,21 +50,28 @@ trunk:1792				branches/numpy:1791
 trunk:1744				branches/fixsort:1743
 trunk:1614				branches/fixufunc:1613
 trunk:1567				branches/fixtype:1566
+trunk:1593				branches/fixscalar:1592
+trunk:1661				branches/fixswap:1660
 trunk:637				branches/build_src:636
 trunk:652     				branches/build_src:651
 trunk:874				branches/v0_3_2:873
 trunk:943				branches/numarray:942
 
 
-# 2) Merges from branch to branch: these are also important for history
+# 2) Merges between branches.
+#    Some of these are important for history, too.
 
 branches/build_with_scons:4678		branches/cleanconfig_rtm:4638
-branches/distutils_scons_command:4632	branches/cleanconfig_rtm:4638
+branches/clean_math_config:5736		cleaned_math_config:5734
+branches/distutils_scons_command:4639	branches/cleanconfig_rtm:4638
+branches/distutils_scons_command:4632	branches/cleanconfig_rtm:4631
 branches/numpy.scons:4219		branches/cleanconfig:4218
 branches/numpy.scons:4222		branches/cleanconfig:4221
 
 
-# 3) Merges from trunk to branches: these are only cosmetic
+# 3) Update merges from trunk. These don't really matter.
+#
+#    But let's list them, nevertheless. For fun and profit (!?)
 
 branches/datetime:7337			trunk:7333
 branches/coremath:6480			trunk:6479
