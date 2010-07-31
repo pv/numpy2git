@@ -44,9 +44,6 @@ final-cleanup:
 	   numpy/refs/svn/
 	cd numpy && git tag -d v0.9.6.2236
 	cd numpy && git tag -d v0.4.2b1.1250
-	cd numpy && git filter-branch --force --prune-empty \
-	 --index-filter 'git update-index --force-remove -- weave scipy/weave' \
-	 -- --all
 	rm -rf numpy/refs/original
 
 gc:

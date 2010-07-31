@@ -80,8 +80,7 @@ This entails a couple of things:
 final-cleanup (step 3)
 ----------------------
 
-We move a couple of leftover branches and tags under ``refs/svn``, and
-strip all Weave-related stuff out from Numpy.
+We move a couple of leftover branches and tags under ``refs/svn``.
 
 gc (step 4)
 -----------
