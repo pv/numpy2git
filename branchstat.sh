@@ -6,6 +6,12 @@
 set -e
 
 REPO="$1"
+SKIPLIST="$2"
+
+pushd `dirname "$SKIPLIST"` > /dev/null
+SKIPLIST="`pwd`/`basename "$SKIPLIST"`"
+popd > /dev/null
+
 if test ! -d "$REPO"; then
     echo "Repository $REPO not found!"
     exit 1
@@ -27,6 +33,10 @@ for branch in `git branch|sort|sed -e s/^..//`; do
 	continue
     fi
     AHEAD=`git log --oneline master..$branch|wc -l`
+    if test -f "$SKIPLIST" && grep -q "^$AHEAD[ \t]*$branch" "$SKIPLIST"; then
+	# skipped
+	continue
+    fi
     if test "$AHEAD" != "0"; then
 	echo -e "$AHEAD\t$branch"
 	ALLOK=0

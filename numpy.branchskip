@@ -1,0 +1,47 @@
+#
+# Unmerged stuff in branches that we know we can skip
+#
+
+
+# -- These contain some obsolete developments that wasn't merged back.
+#
+#    XXX: need to check if it is of some value?
+
+4    crud/aligned_alloca
+7    crud/py3k
+11   crud/multicore
+6    crud/arraykit
+2    crud/withmeta
+2    crud/ejs
+4    crud/numerix
+8    crud/svnroot/numpy.sunperf
+
+# -- These contain stuff merged elsewhere.
+#
+#    Safe to discard.
+
+10   crud/cleanconfig
+5    crud/cleanconfig_rtm
+374  crud/numpy.scons
+
+# -- These contain post-termination junk, the main stuff has a merge commit,
+#    and was listed above.
+#
+#    Safe to discard.
+
+1    crud/cdavid
+1    crud/distutils-revamp
+4    crud/ver1.0
+5    crud/numpy
+
+# -- These contain essentially nothing.
+#
+#    Safe to discard.
+
+1    crud/memmaps
+1    crud/kiva_window_branch
+1    crud/splitcode
+1    crud/svntags/pre_classify_conversion
+1    crud/svntags/kiva_window
+1    crud/vs_longstring
+3    crud/svntags/beta-0.4.2_1250
