@@ -44,7 +44,7 @@ for branch in `git branch|sort|sed -e s/^..//`; do
 done
 
 if test "$ALLOK" = "1"; then
-    echo "All branches fully merged."
+    echo "All branches fully merged (or skipped)."
 fi
 
 exit 0
