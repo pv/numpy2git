@@ -44,6 +44,12 @@ This entails a couple of things:
    ``numpy.grafts`` -- there we list the merge commits, and the
    extra parent of the merge commit.
 
+   The point here is that the branches under ``crud/`` will be dropped
+   in the end. However, some of them were topic branches once in a time,
+   so this would drop some relevant history. So here we aim to stitch
+   the history manually together, by connecting the topical work
+   to the trunk by manually inserting merge parents.
+
    What ``postprocess.sh`` essentially does here, is that it looks
    up the hash corresponding to the SVN revisions in the
    ``.grafts`` file, and dumps that information to Git via the text
