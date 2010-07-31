@@ -5,9 +5,9 @@ REPO="$1"
 REPOBASE=`basename "$REPO"`
 GRAFTS="$2"
 GRAFT_ONLY="$3"
-LOG="$PWD/postprocess-$REPOBASE.log"
-COMMITLIST="$PWD/postprocess-$REPOBASE.commits"
-DROPLIST="$PWD/postprocess-$REPOBASE.dropped"
+LOG="$PWD/log-$REPOBASE-postprocess"
+COMMITLIST="$PWD/log-$REPOBASE-commits"
+DROPLIST="$PWD/log-$REPOBASE-dropped"
 
 if test -d "$REPO/.git"; then
     REPO="$REPO/.git"
