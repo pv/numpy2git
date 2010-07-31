@@ -16,7 +16,7 @@ help:
 all: clean export postprocess gc
 
 clean:
-	rm -rf numpy f2py-research vendor
+	rm -rf numpy f2py-research vendor log-*
 
 export:
 	svn-all-fast-export \
