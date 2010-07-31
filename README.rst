@@ -63,7 +63,7 @@ This entails a couple of things:
 4. ``git prune`` is called to get rid of unwanted stuff.
 
 5. We check which SVN commits didn't make it into the Git repo,
-   and dump that information to ``postprocess-REPONAME.droplist``.
+   and dump that information to ``log-REPONAME-dropped``.
 
 6. SVN metadata is stripped from the commit messages.
 
