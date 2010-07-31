@@ -4,10 +4,12 @@ help:
 	@echo "Targets:"
 	@echo "  make clean"
 	@echo "  make export          -- svn-all-fast-export"
-	@echo "  make graft           -- graft merges"
-	@echo "  make postprocess     -- postprocess (irreversible)"
-	@echo "  make final-cleanup   -- final cleanup (irreversible)"
+	@echo "  make postprocess     -- postprocess"
+	@echo "  make final-cleanup   -- final cleanup"
 	@echo "  make gc              -- git-gc"
+	@echo ""
+	@echo "  make graft           -- (re-)do merge grafting"
+	@echo "  make branchstat      -- show branch status"
 
 all: clean export postprocess gc
 
@@ -24,10 +26,15 @@ export:
 	2>&1 | tee numpy-export.log
 
 graft:
-	./postprocess.sh numpy numpy.graft graft-only
+	./postprocess.sh numpy numpy.grafts graft-only
+	./branchstat.sh numpy numpy.branchskip
+
+branchstat:
+	./branchstat.sh numpy numpy.branchskip
 
 postprocess:
-	./postprocess.sh numpy numpy.graft
+	./postprocess.sh numpy numpy.grafts
+	./branchstat.sh numpy
 
 final-cleanup:
 	cd numpy && git branch -D maintenance/1.1.x_5227
