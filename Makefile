@@ -20,10 +20,9 @@ export:
 	svn-all-fast-export \
 	  --identity-map authors.map \
 	  --rules numpy.rules \
-	  --commit-interval 1000 \
 	  --add-metadata \
 	  $(SVN) \
-	2>&1 | tee numpy-export.log
+	2>&1 | tee log-numpy-export
 
 graft:
 	./postprocess.sh numpy numpy.grafts graft-only
@@ -39,7 +38,7 @@ final-cleanup:
 	cd numpy && git branch -D maintenance/1.1.x_5227
 	cd numpy && git branch -D master_1460
 	cd numpy && git tag -d v0.9.6.2236
-	cd numpy && git filter-branch --prune-empty \
+	cd numpy && git filter-branch --force --prune-empty \
 	 --index-filter 'git update-index --force-remove -- weave scipy/weave' \
 	 -- --all
 
