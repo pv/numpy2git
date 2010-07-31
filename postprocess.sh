@@ -70,7 +70,7 @@ cat "$GRAFTS" | while read BASE BRANCH; do
 done
 
 if test "$?" != 0; then
-    echo "Failure!"
+    echo "Failure in grafting!"
     exit 1
 fi
 

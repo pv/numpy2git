@@ -11,9 +11,52 @@
 
 # TO BRANCH				FROM BRANCH
 # ---------				-----------
+
+# 1) Merges to trunk: these are *important* for preserving history
+
 trunk:7339				branches/datetime:7337
-branches/datetime:7337			trunk:7333
 trunk:6481				branches/coremath:6480
+trunk:6441				branches/numpy-mingw-w64:6425
+trunk:6360				branches/fix_float_format:6319
+trunk:6250				branches/fix_float_format:6249
+trunk:6235				branches/fix_float_format:6234
+trunk:6090				branches/ufunc_cleanup:5955
+trunk:6089				branches/ufunc_cleanup:5955
+trunk:6078				branches/visualstudio_manifest:6077
+trunk:6026				branches/ufunc_cleanup:5955
+trunk:5981				branches/ufunc_cleanup:5955
+trunk:5976				branches/ufunc_cleanup:5955
+trunk:5950				branches/gen_ufuncs:5675
+trunk:5913				branches/clean_math_config:5912
+trunk:5258				branches/cdavid:5210
+trunk:4778      			branches/maskedarray:4777
+trunk:4773    				branches/build_with_scons:4772
+trunk:4666				branches/lib_for_io:4665
+trunk:3823    				branches/distutils-revamp:3795
+trunk:2899				branches/ver1.0:2898
+trunk:2206				branches/power_optimization:2205
+trunk:2080				branches/newunicode:2079
+trunk:1792				branches/numpy:1791
+trunk:1744				branches/fixsort:1743
+trunk:1614				branches/fixufunc:1613
+trunk:1567				branches/fixtype:1566
+trunk:637				branches/build_src:636
+trunk:652     				branches/build_src:651
+trunk:874				branches/v0_3_2:873
+trunk:943				branches/numarray:942
+
+
+# 2) Merges from branch to branch: these are also important for history
+
+branches/build_with_scons:4678		branches/cleanconfig_rtm:4638
+branches/distutils_scons_command:4632	branches/cleanconfig_rtm:4638
+branches/numpy.scons:4219		branches/cleanconfig:4218
+branches/numpy.scons:4222		branches/cleanconfig:4221
+
+
+# 3) Merges from trunk to branches: these are only cosmetic
+
+branches/datetime:7337			trunk:7333
 branches/coremath:6480			trunk:6479
 branches/coremath:6478			trunk:6477
 branches/coremath:6476			trunk:6475
@@ -22,11 +65,9 @@ branches/coremath:6460			trunk:6459
 branches/coremath:6452			trunk:6451
 branches/coremath:6450			trunk:6446
 branches/coremath:6445			trunk:6442
-trunk:6441				branches/numpy-mingw-w64:6425
 branches/numpy-mingw-w64:6425		trunk:6424
 branches/coremath:6411			trunk:6410
 branches/dynamic_cpu_configuration:6369	trunk:6368
-trunk:6360				branches/fix_float_format:6319
 branches/fix_float_format:6272		trunk:6271
 branches/fix_float_format:6270		trunk:6268
 branches/fix_float_format:6269		trunk:6266
@@ -37,27 +78,17 @@ branches/fix_float_format:6259		trunk:6258
 branches/fix_float_format:6257		trunk:6256
 branches/fix_float_format:6254		trunk:6253
 branches/fix_float_format:6252		trunk:6251
-trunk:6250				branches/fix_float_format:6249
 branches/fix_float_format:6245		trunk:6244
 branches/fix_float_format:6243		trunk:6241
 branches/fix_float_format:6239		trunk:6238
-trunk:6235				branches/fix_float_format:6234
 branches/numpy-mingw-w64:6183		trunk:6182
 branches/dynamic_cpu_configuration:6188	trunk:6187
-trunk:6090				branches/ufunc_cleanup:5955
-trunk:6089				branches/ufunc_cleanup:5955
-trunk:6078				branches/visualstudio_manifest:6077
 branches/visualstudio_manifest:6077	trunk:6076
 branches/visualstudio_manifest:6071	trunk:6070
 branches/visualstudio_manifest:6051	trunk:6050
-trunk:6026				branches/ufunc_cleanup:5955
-trunk:5981				branches/ufunc_cleanup:5955
-trunk:5976				branches/ufunc_cleanup:5955
 branches/ufunc_cleanup:5955		trunk:5954
 branches/ufunc_cleanup:5952		trunk:5951
-trunk:5950				branches/gen_ufuncs:5675
 branches/ufunc_cleanup:5928		trunk:5926
-trunk:5913				branches/clean_math_config:5912
 branches/clean_math_config:5912		trunk:5906
 branches/clean_math_config:5882		trunk:5880
 branches/clean_math_config:5861		trunk:5860
@@ -65,15 +96,9 @@ branches/clean_math_config:5844		trunk:5835
 branches/clean_math_config:5812		trunk:5810
 branches/clean_math_config:5762		trunk:5755
 branches/cdavid:5302			trunk:5301
-trunk:5258				branches/cdavid:5210
-trunk:4778      			branches/maskedarray:4777
 branches/maskedarray:4777		trunk:4776
-trunk:4773    				branches/build_with_scons:4772
 branches/build_with_scons:4772		trunk:4766
 branches/maskedarray:4759		trunk:4756
-branches/build_with_scons:4678		branches/cleanconfig_rtm:4638
-trunk:4666				branches/lib_for_io:4665
-branches/distutils_scons_command:4632	branches/cleanconfig_rtm:4638
 branches/cleanconfig_rtm:4631		trunk:4626
 branches/numpy.scons:4594		trunk:4590
 branches/numpy.scons:4582		trunk:4579
@@ -83,19 +108,5 @@ branches/numpy.scons:4530		trunk:4528
 branches/numpy.scons:4526		trunk:4525
 branches/numpy.scons:4522		trunk:4518
 branches/numpy.scons:4521		trunk:4507
-branches/numpy.scons:4219		branches/cleanconfig:4218
-branches/numpy.scons:4222		branches/cleanconfig:4221
-trunk:3823    				branches/distutils-revamp:3795
 branches/ver1.0:2907			trunk:2906
-trunk:2899				branches/ver1.0:2898
-trunk:2206				branches/power_optimization:2205
 branches/power_optimization:2205	trunk:2204
-trunk:2080				branches/newunicode:2079
-trunk:1792				branches/numpy:1791
-trunk:1744				branches/fixsort:1743
-trunk:1614				branches/fixufunc:1613
-trunk:1567				branches/fixtype:1566
-trunk:637				branches/build_src:636
-trunk:652     				branches/build_src:651
-trunk:874				branches/v0_3_2:873
-trunk:943				branches/numarray:942
