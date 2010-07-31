@@ -4,6 +4,7 @@ set -e
 REPO="$1"
 REPOBASE=`basename "$REPO"`
 GRAFTS="$2"
+GRAFT_ONLY="$3"
 LOG="$PWD/postprocess-$REPOBASE.log"
 
 if test -d "$REPO/.git"; then
@@ -20,7 +21,7 @@ if test ! -f "$GRAFTS"; then
     exit 1
 fi
 
-# how can getting an absolute path be this hard?
+# get absolute path
 pushd `dirname "$GRAFTS"` > /dev/null
 GRAFTS="`pwd`/`basename "$GRAFTS"`"
 popd > /dev/null
@@ -38,10 +39,12 @@ msg() {
     echo "$@" 2>&1 | tee -a "$LOG"
 }
 
-
+#
 # 1) Inject graft points for merges
+#
 
-> info/grafts
+rm -f info/grafts
+> info/grafts.new
 
 cat "$GRAFTS" | while read BASE BRANCH; do
     if test -z "$BASE" -a -z "$BRANCH"; then
@@ -59,35 +62,45 @@ cat "$GRAFTS" | while read BASE BRANCH; do
     BRANCH_HASH=`git log --grep="$BRANCH_GREP" --format=format:%H --all`
     if test -z "$BASE_HASH" -o -z "$BRANCH_HASH"; then
 	msg "ERROR: Graft point <$BASE>:<$BRANCH> not found: <$BASE_HASH>:<$BRANCH_HASH>"
-	exit 1
+	exit 123
     fi
     BASE_PARENT_HASH=`git rev-parse $BASE_HASH^`
     msg "Grafting $BRANCH -> $BASE"
     #msg "    base: $BASE_HASH"
     #msg "    parent: $BASE_PARENT_HASH"
     #msg "    added parent: $BRANCH_HASH"
-    echo "$BASE_HASH $BASE_PARENT_HASH $BRANCH_HASH" >> info/grafts
+    echo "$BASE_HASH $BASE_PARENT_HASH $BRANCH_HASH" >> info/grafts.new
 done
 
-if test "$?" != 0; then
-    echo "Failure in grafting!"
+if test "$?" = "123"; then
+    msg "Failure in grafting!"
     exit 1
 fi
 
-exit 0
+mv -f info/grafts.new info/grafts
 
+if test "$GRAFT_ONLY" = "graft-only"; then
+    exit 0;
+fi
+
+#
 # 2) Strip SVN metadata, and make the grafts permanent
+#
 
 run git filter-branch --msg-filter 'head -n-2' -- --all
 rm -f info/grafts
 
+#
 # 3) Remove crud branches
+#
 
 for crud in `git branch|grep "^  crud/"`; do
     run git branch -D "$crud"
 done
 
+#
 # 4) Convert SVN tag branches to real tags
+#
 
 for branch in `git branch|grep "^  svntags/"`; do
     tag=`echo -n "$branch"|sed -e 's@svntags/v*@@'|sed -e 's/_/./g'`
@@ -96,5 +109,7 @@ for branch in `git branch|grep "^  svntags/"`; do
     run git branch -D "$branch"
 done
 
-# 4) Collect garbage
+#
+# 5) Collect garbage
+#
 run git prune
