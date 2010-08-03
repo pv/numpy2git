@@ -121,6 +121,7 @@ rmdir "$REPOGIT"/refs/heads/svntags
 #
 MAX_REVISION=`git log --all | sed -n -e '/^    svn path/{s/.*revision=//;p}'|sort -n|tail -n1`
 
+run git reflog expire --expire=0
 run git prune
 
 
