@@ -55,8 +55,10 @@ final-cleanup:
 	rm -rf numpy/refs/original
 
 gc:
-	cd numpy && git gc --aggressive
-	cd vendor && git gc --aggressive
-	cd f2py-research && git gc --aggressive
+	for repo in numpy vendor f2py-research; do \
+	    (cd $$repo && \
+	     git repack -f -a -d --depth=500 --window=250 && \
+	     git gc --prune=0); \
+	done
 
 .PHONY: help all clean export graft final-cleanup postprocess gc
