@@ -18,8 +18,16 @@ all: clean export postprocess final-cleanup gc
 clean:
 	rm -rf numpy numpy.save f2py-research vendor log-*
 
-export:
-	svn-all-fast-export \
+svn2git:
+	git clone git://gitorious.org/svn2git/svn2git.git svn2git
+
+svn2git/svn-all-fast-export: svn2git
+	cd svn2git && git checkout -f 80d1c990 && git clean -f -x
+	cd svn2git && qmake
+	make -C svn2git
+
+export: svn2git/svn-all-fast-export
+	./svn2git/svn-all-fast-export \
 	  --identity-map authors.map \
 	  --rules numpy.rules \
 	  --add-metadata \
