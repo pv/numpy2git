@@ -31,6 +31,7 @@ export: svn2git/svn-all-fast-export
 	  --identity-map authors.map \
 	  --rules numpy.rules \
 	  --add-metadata \
+	  --commit-interval 500 \
 	  $(SVN) \
 	2>&1 | tee log-numpy-export
 	rm -rf numpy.save
