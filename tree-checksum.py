@@ -36,7 +36,10 @@ def main():
 
 def _with_workdir(func):
     def wrapper(*a, **kw):
-        tmpdir = os.path.abspath(tempfile.mkdtemp())
+        if os.path.isdir('/dev/shm'):
+            tmpdir = os.path.abspath(tempfile.mkdtemp(dir='/dev/shm'))
+        else:
+            tmpdir = os.path.abspath(tempfile.mkdtemp())
         try:
             a = a + (tmpdir,)
             func(*a, **kw)
