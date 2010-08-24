@@ -37,6 +37,15 @@ export: svn2git/svn-all-fast-export
 	rm -rf numpy.save
 	cp -a numpy numpy.save
 
+verify-numpy.save:
+	./tree-checksum.py --all-git numpy.save | tee $@
+
+verify-numpy.svn:
+	./tree-checksum.py --all-svn $(SVN) | tee $@
+
+verify: verify-numpy.save verify-numpy.svn
+	diff -u verify-numpy.save verify-numpy.svn
+
 graft:
 	./postprocess.sh numpy numpy.grafts graft-only
 	./branchstat.sh numpy numpy.branchskip
@@ -62,4 +71,4 @@ gc:
 	     git gc --prune=0); \
 	done
 
-.PHONY: help all clean export graft final-cleanup postprocess gc
+.PHONY: help all clean export graft final-cleanup postprocess gc verify
