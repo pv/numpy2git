@@ -30,6 +30,13 @@ rewritten later on.
 Valid SVN tags go, as branches, under ``svntags/``.
 
 
+verify (step 1.5)
+-----------------
+
+Compute checksums for the contents of all revisions in SVN and in Git,
+and fail if the checksums do not match.
+
+
 postprocess (step 2)
 --------------------
 
