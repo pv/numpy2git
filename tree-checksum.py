@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-Usage: tree-checksum.py DIRECTORY
+Usage: tree-checksum.py [--all-git|--all-svn] DIRECTORY > LISTING
+       tree-checksum.py --compare ORIGINAL CONVERTED
 
 Compute a checksum for a directory (or for svn-all-fast-export / SVN items).
 
@@ -19,7 +20,15 @@ def main():
     p = optparse.OptionParser(usage=__doc__.strip())
     p.add_option("--all-git", action="store_true")
     p.add_option("--all-svn", action="store_true")
+    p.add_option("--start-rev", action="store", type="int")
+    p.add_option("--compare", action="store_true")
     options, args = p.parse_args()
+
+    if options.compare:
+        if len(args) != 2:
+            p.error("invalid number of arguments")
+        equal = do_compare(args[0], args[1])
+        sys.exit(0 if equal else 1)
 
     if len(args) != 1:
         p.error("invalid number of arguments")
@@ -27,9 +36,9 @@ def main():
     path = args[0]
 
     if options.all_git:
-        do_git(path)
+        do_git(path, start_rev=options.start_rev)
     elif options.all_svn:
-        do_svn(path)
+        do_svn(path, start_rev=options.start_rev)
     else:
         print path_checksum(path)
     sys.exit(0)
@@ -44,31 +53,77 @@ def _with_workdir(func):
             shutil.rmtree(tmpdir)
     return wrapper
 
+def do_compare(original_filename, converted_filename, start_rev=None):
+    original = _read_listing(original_filename)
+    converted = _read_listing(converted_filename)
+
+    states = original.keys()
+    states.sort()
+
+    equal = True
+
+    for state in states:
+        if state in converted:
+            if original[state] != converted[state]:
+                equal = False
+                print "MISMATCH ", state[0], state[1]
+        else:
+            print "missing  ", state[0], state[1]
+
+    states = converted.keys()
+    states.sort()
+    for state in states:
+        if state not in original:
+            print "spurious ", state[0], state[1]
+
+    return equal
+
+def _read_listing(filename):
+    listing = {}
+    f = open(filename, 'r')
+    try:
+        for line in f:
+            if not line.strip():
+                continue
+            parts = line.strip().split()
+            if len(parts) != 3:
+                raise ValueError("Invalid line '%s'" % line)
+            listing[(int(parts[0]), parts[1])] = parts[2]
+    finally:
+        f.close()
+    return listing
+
 @_with_workdir
-def do_git(path, workdir):
+def do_git(path, workdir, start_rev=None):
     repo = os.path.join(workdir, 'repo')
     git('clone', '--quiet', path, repo)
     os.chdir(repo)
 
     for commit in git.readlines('log', '--format=%H', '--all'):
         git('checkout', '--quiet', commit)
-        checksum = path_checksum(repo)
 
         msg = git.readlines('cat-file', 'commit', commit)
         m = re.match(r'svn path=/(.*)/; revision=(\d+)', msg[-1].strip())
         assert m is not None, commit
 
+        if start_rev is not None and int(m.group(2)) > start_rev:
+            continue
+
+        checksum = path_checksum(repo)
         print m.group(2), m.group(1), checksum
         sys.stdout.flush()
 
 @_with_workdir
-def do_svn(path, workdir):
+def do_svn(path, workdir, start_rev=None):
     url = "file://" + \
           os.path.normpath(os.path.abspath(path)).replace(os.path.sep, '/').rstrip('/')
 
     branchdirs = {}
 
     for commit, branch in svn_logreader(url):
+        if start_rev is not None and commit > start_rev:
+            continue
+
         if branch not in branchdirs:
             dirname = branch.replace('/', '-')
             branchdirs[branch] = os.path.join(workdir, dirname)
