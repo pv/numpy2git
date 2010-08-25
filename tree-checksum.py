@@ -118,7 +118,9 @@ def svn_logreader(url):
                     key = (commit, branch)
                     if key not in seen:
                         seen[key] = True
-                        yield commit, m.group(1)
+                        if line != "D /%s" % m.group(1):
+                            # skip whole-branch deletions
+                            yield commit, m.group(1)
 
 
 def path_checksum(path):
