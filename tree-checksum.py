@@ -128,7 +128,7 @@ def do_svn(path, workdir, start_rev=None):
             dirname = branch.replace('/', '-')
             branchdirs[branch] = os.path.join(workdir, dirname)
             svn('checkout', '-q', '-r', str(commit),
-                url + '/' + branch, branchdirs[branch])
+                url + '/' + branch + ("@%s" % commit), branchdirs[branch])
             os.chdir(branchdirs[branch])
         else:
             os.chdir(branchdirs[branch])
