@@ -44,7 +44,7 @@ verify-numpy.svn:
 	./tree-checksum.py --all-svn $(SVN) | tee $@
 
 verify: verify-numpy.save verify-numpy.svn
-	diff -u verify-numpy.save verify-numpy.svn
+	./tree-checksum.py --compare verify-numpy.svn verify-numpy.save
 
 graft:
 	./postprocess.sh numpy numpy.grafts graft-only
