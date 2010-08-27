@@ -15,6 +15,8 @@ import hashlib
 import shutil
 import subprocess
 
+KEYWORD_STRIP_SCRIPT = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                    'svn-kill-keywords.py'))
 
 def main():
     p = optparse.OptionParser(usage=__doc__.strip())
@@ -134,6 +136,7 @@ def do_svn(path, workdir, start_rev=None):
             os.chdir(branchdirs[branch])
             svn('update', '-q', '-r', str(commit))
             svn('revert', '-q', '-R', '.')
+        subprocess.call([KEYWORD_STRIP_SCRIPT])
 
         checksum = path_checksum(branchdirs[branch])
         print commit, branch, checksum
