@@ -1,0 +1,69 @@
+SVN=$(CURDIR)/../scipy-svn
+
+help:
+	@echo "Targets:"
+	@echo ""
+	@echo "  make clean"
+	@echo "  make export SVN=...  -- svn-all-fast-export"
+	@echo "  make postprocess     -- postprocess"
+	@echo "  make final-cleanup   -- final cleanup"
+	@echo "  make gc              -- git-gc"
+	@echo ""
+	@echo "  make graft           -- (re-)do merge grafting"
+	@echo "  make branchstat      -- show branch status"
+	@echo ""
+
+all: clean export postprocess final-cleanup gc
+
+clean:
+	rm -rf scipy scipy.save log-*
+
+svn2git:
+	git clone git://gitorious.org/svn2git/svn2git.git svn2git
+
+svn2git/svn-all-fast-export: svn2git
+	cd svn2git && git checkout -f 80d1c990 && git clean -f -x
+	cd svn2git && qmake
+	make -C svn2git
+
+export: svn2git/svn-all-fast-export
+	./svn2git/svn-all-fast-export \
+	  --identity-map authors.map \
+	  --rules scipy.rules \
+	  --add-metadata \
+	  --commit-interval 500 \
+	  $(SVN) \
+	2>&1 | tee log-scipy-export
+	rm -rf scipy.save
+	cp -a scipy scipy.save
+
+verify-scipy.save:
+	./tree-checksum.py --all-git scipy.save | tee $@
+
+verify-scipy.svn:
+	./tree-checksum.py --all-svn $(SVN) | tee $@
+
+verify: verify-scipy.save verify-scipy.svn
+	./tree-checksum.py --compare verify-scipy.svn verify-scipy.save
+
+graft:
+	./postprocess.sh scipy scipy.grafts graft-only
+	./branchstat.sh scipy scipy.branchskip
+
+branchstat:
+	./branchstat.sh scipy scipy.branchskip
+
+postprocess:
+	./postprocess.sh scipy scipy.grafts
+
+final-cleanup:
+	rm -rf scipy/refs/original
+
+gc:
+	for repo in scipy; do \
+	    (cd $$repo && \
+	     git repack -f -a -d --depth=500 --window=250 && \
+	     git gc --prune=0); \
+	done
+
+.PHONY: help all clean export graft final-cleanup postprocess gc verify

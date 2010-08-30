@@ -1,0 +1,123 @@
+# Repositories
+# ------------
+
+create repository scipy
+end repository
+
+create repository scipy.org
+end repository
+
+
+# Trunks
+# ------
+
+match /trunk/
+    repository scipy
+    branch master
+end match
+
+match /scipy.org/
+    repository scipy.org
+    branch master
+end match
+
+
+# Branches
+# --------
+
+# Release branches
+
+match /branches/(0.5.2.x)/
+    repository scipy
+    branch maintenance/\1
+end match
+
+match /branches/(0.6.x)/
+    repository scipy
+    branch maintenance/\1
+end match
+
+match /branches/(0.7.x)/
+    repository scipy
+    branch maintenance/\1
+end match
+
+match /branches/(0.8.x)/
+    repository scipy
+    branch maintenance/\1
+end match
+
+match /branches/v0_3_2/
+  repository scipy
+  branch svntags/0.3.2
+end match
+
+
+# The rest of the branches.
+#
+# These will be removed in a post-processing step, but are kept here
+# for preserving the history relevant for trunk
+
+match /branches/([^/]+)/
+    repository scipy
+    branch crud/\1
+end match
+
+
+# Extraneous root paths
+# ---------------------
+
+match /scipy-docs/
+    repository scipy
+    branch crud/svnroot/scipy-docs
+end match
+
+
+# Tags
+# ----
+
+# Make SVN tags branches, and convert them to tags in a post-processing step
+
+match /tags/([0-9]+[^/]+)/
+  repository scipy
+  branch svntags/\1
+end match
+
+match /tags/v0_2_0/
+  repository scipy
+  branch svntags/0.2.0
+end match
+
+match /tags/v0_2_2/
+  repository scipy
+  branch svntags/0.2.2
+end match
+
+match /tags/v0_3_0/
+  repository scipy
+  branch svntags/0.3.0
+end match
+
+match /tags/release_0_1_0/
+  repository scipy
+  branch svntags/0.1.0
+end match
+
+match /tags/release_0_1_1/
+  repository scipy
+  branch svntags/0.1.1
+end match
+
+match /tags/release_0_1_2/
+  repository scipy
+  branch svntags/0.1.2
+end match
+
+
+# Rest of the tags are crud; but again remove them only in post-processing
+
+match /tags/([^/]+)/
+  repository scipy
+  branch crud/svntags/\1
+end match
+
