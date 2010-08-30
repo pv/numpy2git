@@ -7,7 +7,7 @@ trunk:3736				branches/weave_cleanup:3735
 trunk:3822				branches/testing_cleanup:3815
 trunk:5127				scipy-docs:5116
 
-branches/io_new:3655			trunk:3654
+branches/io_new:3655			trunk:3652
 branches/mb_mio_refactor:4451		trunk:4450
 branches/mb_mio_refactor:4453		trunk:4450
 
