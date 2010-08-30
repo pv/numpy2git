@@ -134,6 +134,7 @@ def do_svn(path, workdir, start_rev=None):
             os.chdir(branchdirs[branch])
         else:
             os.chdir(branchdirs[branch])
+            svn('revert', '-q', '-R', '.')
             svn('update', '-q', '-r', str(commit))
             svn('revert', '-q', '-R', '.')
         subprocess.call([KEYWORD_STRIP_SCRIPT])
