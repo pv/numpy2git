@@ -129,13 +129,13 @@ def do_svn(path, workdir, start_rev=None):
         if branch not in branchdirs:
             dirname = branch.replace('/', '-')
             branchdirs[branch] = os.path.join(workdir, dirname)
-            svn('checkout', '-q', '-r', str(commit),
+            svn('checkout', '--ignore-externals', '-q', '-r', str(commit),
                 url + '/' + branch + ("@%s" % commit), branchdirs[branch])
             os.chdir(branchdirs[branch])
         else:
             os.chdir(branchdirs[branch])
             svn('revert', '-q', '-R', '.')
-            svn('update', '-q', '-r', str(commit))
+            svn('update', '--ignore-externals', '-q', '-r', str(commit))
             svn('revert', '-q', '-R', '.')
         subprocess.call([KEYWORD_STRIP_SCRIPT])
 
