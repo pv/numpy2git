@@ -16,7 +16,7 @@ help:
 all: clean export postprocess final-cleanup gc
 
 clean:
-	rm -rf scipy scipy.save log-*
+	rm -rf scipy scipy.org scipy.save log-*
 
 svn2git:
 	git clone git://gitorious.org/svn2git/svn2git.git svn2git
@@ -60,7 +60,7 @@ final-cleanup:
 	rm -rf scipy/refs/original
 
 gc:
-	for repo in scipy; do \
+	for repo in scipy scipy.org; do \
 	    (cd $$repo && \
 	     git repack -f -a -d --depth=500 --window=250 && \
 	     git gc --prune=0); \
