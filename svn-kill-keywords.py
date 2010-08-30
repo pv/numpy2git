@@ -29,6 +29,8 @@ def main():
         strip_keywords(fn, keywords)
 
 def strip_keywords(filename, keywords):
+    if filename.endswith('scipy/doc/DISTUTILS.txt'):
+        keywords = [k if k != 'HeadURL' else 'HeadURL:' for k in keywords]
     kw = re.compile('\\$(%s)[^\\$\n]+?\\$' % '|'.join(keywords), re.S)
 
     f = open(filename, 'rb')
