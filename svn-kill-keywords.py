@@ -25,25 +25,10 @@ def main():
     targets = find_targets()
 
     # Strip keywords from files
-    for fn, keywords in targets.items():
-        strip_keywords(fn, keywords)
-
-def strip_keywords(filename, keywords):
-    if filename.endswith('scipy/doc/DISTUTILS.txt'):
-        keywords = [k if k != 'HeadURL' else 'HeadURL:' for k in keywords]
-    kw = re.compile('\\$(%s)[^\\$\n]+?\\$' % '|'.join(keywords), re.S)
-
-    f = open(filename, 'rb')
-    data = f.read()
-    f.close()
-
-    data = kw.sub(r'$\1$', data)
-
-    fd, tmpfn = tempfile.mkstemp()
-    os.write(fd, data)
-    os.close(fd)
-
-    shutil.move(tmpfn, filename)
+    for fn, keywords in sorted(targets.items()):
+        svn_base_fn = os.path.join(os.path.dirname(fn), '.svn', 'text-base',
+                                   os.path.basename(fn) + '.svn-base')
+        shutil.copyfile(svn_base_fn, fn)
 
 def find_targets():
     s = subprocess.Popen(['svn', 'pg', '-R', '--xml', 'svn:keywords'],
