@@ -57,6 +57,9 @@ postprocess:
 	./postprocess.sh scipy scipy.grafts
 
 final-cleanup:
+	mv scipy/refs/heads/master_1431 \
+	    scipy/refs/svn/
+	cd scipy && git tag -d v0.8.0.6641
 	rm -rf scipy/refs/original
 
 gc:
