@@ -57,9 +57,13 @@ postprocess:
 	./postprocess.sh scipy scipy.grafts
 
 final-cleanup:
-	mv scipy/refs/heads/master_1431 \
-	    scipy/refs/svn/
-	cd scipy && git tag -d v0.8.0.6641
+	for f in scipy/refs/backups/*; do \
+	    install -d "$$f"/tags; \
+	    mv -f "$$f"/heads/svntags/* "$$f"/tags || true; \
+	    mv -f "$$f"/heads/crud/* "$$f"/heads || true; \
+	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/crud || true; \
+	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/svntags || true; \
+	done
 	rm -rf scipy/refs/original
 
 gc:

@@ -57,11 +57,14 @@ postprocess:
 	./postprocess.sh numpy numpy.grafts
 
 final-cleanup:
-	mv numpy/refs/heads/maintenance/1.1.x_5227 \
-	   numpy/refs/heads/master_1460 \
-	   numpy/refs/svn/
-	cd numpy && git tag -d v0.9.6.2236
-	cd numpy && git tag -d v0.4.2b1.1250
+	for f in numpy/refs/backups/*; do \
+	    install -d "$$f"/tags; \
+	    mv -f "$$f"/heads/svntags/* "$$f"/tags || true; \
+	    mv -f "$$f"/heads/crud/* "$$f"/heads || true; \
+	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/crud || true; \
+	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/svntags || true; \
+	done
+	mv -f numpy/refs/backups numpy/refs/svn/
 	rm -rf numpy/refs/original
 
 gc:
