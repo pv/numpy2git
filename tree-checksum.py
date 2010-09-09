@@ -100,16 +100,17 @@ def do_git(path, workdir, start_rev=None):
     repo = os.path.join(workdir, 'repo')
     git('clone', '--quiet', path, repo)
     os.chdir(repo)
+    git('fetch', '--quiet', 'origin', 'refs/*:refs/remotes/origin/*')
 
     for commit in git.readlines('log', '--format=%H', '--all'):
-        git('checkout', '--quiet', commit)
-
         msg = git.readlines('cat-file', 'commit', commit)
         m = re.match(r'svn path=/(.*)/; revision=(\d+)', msg[-1].strip())
         assert m is not None, commit
 
         if start_rev is not None and int(m.group(2)) > start_rev:
             continue
+
+        git('checkout', '--quiet', commit)
 
         checksum = path_checksum(repo)
         print m.group(2), m.group(1), checksum
