@@ -135,4 +135,5 @@ branches/power_optimization:2205	trunk:2204
 # svn-all-fast-export fails to supply parents for some branches.
 # We hand-graft them.
 
+trunk:1460                              branches/newcore:1458 
 branches/lib_for_io:4585		trunk:4579
