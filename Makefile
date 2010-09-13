@@ -59,15 +59,14 @@ postprocess:
 	./postprocess.sh numpy numpy.grafts
 
 final-cleanup:
-	for f in numpy/refs/backups/*; do \
-	    install -d "$$f"/tags; \
-	    mv -f "$$f"/heads/svntags/* "$$f"/tags || true; \
-	    mv -f "$$f"/heads/crud/* "$$f"/heads || true; \
-	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/crud || true; \
-	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/svntags || true; \
+	install -d numpy/refs/svn/backups
+	find numpy/refs/backups -type f \
+	| while read F; do \
+		NEWF=`echo "$$F"|sed -e 's@.*/r\([0-9]\+\)/.*/\([^/]\+\)$$@\2_\1@'`; \
+		mv "$$F" numpy/refs/svn/backups/"$$NEWF"; \
 	done
-	mv -f numpy/refs/backups numpy/refs/svn/
 	rm -rf numpy/refs/original
+	rm -rf numpy/refs/backups
 
 gc:
 	for repo in numpy vendor f2py-research; do \
