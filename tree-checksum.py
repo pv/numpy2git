@@ -175,7 +175,7 @@ def svn_logreader(url):
 
                 m = re.match(r'^[MARD]\s+/(.*)', line)
                 pth = m.group(1)
-                m = re.match(r'^(branches/[^/ ]+|trunk).*?', pth)
+                m = re.match(r'^(branches/[^/ ]+|tags/[^/ ]+|trunk).*?', pth)
                 if m:
                     branch = m.group(1)
                     key = (commit, branch)
