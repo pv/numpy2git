@@ -62,6 +62,10 @@ def do_compare(original_filename, converted_filename, start_rev=None):
     states = original.keys()
     states.sort()
 
+    converted_checksums = {}
+    for (rev, branch), checksum in converted.items():
+        converted_checksums[checksum] = True
+
     equal = True
 
     for state in states:
@@ -70,7 +74,12 @@ def do_compare(original_filename, converted_filename, start_rev=None):
                 equal = False
                 print "MISMATCH ", state[0], state[1]
         else:
-            print "missing  ", state[0], state[1]
+            # The converted repo contains commits only for those SVN commits
+            # that actually change something. So report missing states
+            # only if the tree checksum does not appear at all in the converted
+            # repo.
+            if original[state] not in converted_checksums:
+                print "MISSING  ", state[0], state[1]
 
     states = converted.keys()
     states.sort()
