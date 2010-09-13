@@ -118,8 +118,11 @@ def do_git(path, workdir, start_rev=None):
 
 @_with_workdir
 def do_svn(path, workdir, start_rev=None):
-    url = "file://" + \
-          os.path.normpath(os.path.abspath(path)).replace(os.path.sep, '/').rstrip('/')
+    if '://' in path:
+        url = path
+    else:
+        url = ("file://" +
+               os.path.normpath(os.path.abspath(path)).replace(os.path.sep, '/').rstrip('/'))
 
     branchdirs = {}
 
