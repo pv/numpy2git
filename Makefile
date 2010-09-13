@@ -16,7 +16,9 @@ help:
 all: clean export postprocess final-cleanup gc
 
 clean:
-	rm -rf numpy numpy.save f2py-research vendor log-*
+	rm -rf numpy numpy.save f2py-research vendor log-* \
+	    revisions-numpy revisions-f2py-research \
+	    revisions-vendor verify-numpy.git
 
 svn2git:
 	git clone git://gitorious.org/svn2git/svn2git.git svn2git
@@ -37,14 +39,14 @@ export: svn2git/svn-all-fast-export
 	rm -rf numpy.save
 	cp -a numpy numpy.save
 
-verify-numpy.save:
+verify-numpy.git:
 	./tree-checksum.py --all-git numpy.save | tee $@
 
 verify-numpy.svn:
 	./tree-checksum.py --all-svn $(SVN) | tee $@
 
-verify: verify-numpy.save verify-numpy.svn
-	./tree-checksum.py --compare verify-numpy.svn verify-numpy.save
+verify: verify-numpy.git verify-numpy.svn
+	./tree-checksum.py --compare verify-numpy.svn verify-numpy.git
 
 graft:
 	./postprocess.sh numpy numpy.grafts graft-only
