@@ -7,10 +7,12 @@ trunk:3736				branches/weave_cleanup:3735
 trunk:3822				branches/testing_cleanup:3815
 trunk:5127				scipy-docs:5116
 trunk:5154                              trunk:5081
+trunk:1431				branches/newscipy:1429
 
 branches/io_new:3655			trunk:3652
 branches/mb_mio_refactor:4451		trunk:4450
 branches/mb_mio_refactor:4453		trunk:4450
+branches/oldscipy:1430			trunk:1321
 
 branches/weave_cleanup:3735		trunk:3722
 branches/build_with_scons:3976		trunk:3969
@@ -25,4 +27,3 @@ branches/refactor_fft:4327		trunk:4326
 branches/refactor_fft:4253		trunk:4252
 branches/refactor_fft:4229		trunk:4226
 branches/0.7.x:5632			trunk:5631
-
