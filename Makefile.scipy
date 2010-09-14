@@ -16,7 +16,9 @@ help:
 all: clean export postprocess final-cleanup gc
 
 clean:
-	rm -rf scipy scipy.org scipy.save log-*
+	rm -rf scipy scipy.org scipy.save log-* \
+	    revisions-scipy revisions-scipy.org \
+	    verify-scipy.git
 
 svn2git:
 	git clone git://gitorious.org/svn2git/svn2git.git svn2git
@@ -57,19 +59,19 @@ postprocess:
 	./postprocess.sh scipy scipy.grafts
 
 final-cleanup:
-	for f in scipy/refs/backups/*; do \
-	    install -d "$$f"/tags; \
-	    mv -f "$$f"/heads/svntags/* "$$f"/tags || true; \
-	    mv -f "$$f"/heads/crud/* "$$f"/heads || true; \
-	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/crud || true; \
-	    rmdir -p --ignore-fail-on-non-empty "$$f"/heads/svntags || true; \
+	install -d scipy/refs/svn/backups
+	find scipy/refs/backups -type f \
+	| while read F; do \
+		NEWF=`echo "$$F"|sed -e 's@.*/r\([0-9]\+\)/.*/\([^/]\+\)$$@\2_\1@'`; \
+		mv "$$F" scipy/refs/svn/backups/"$$NEWF"; \
 	done
 	rm -rf scipy/refs/original
+	rm -rf scipy/refs/backups
 
 gc:
 	for repo in scipy scipy.org; do \
 	    (cd $$repo && \
-	     git repack -f -a -d --depth=500 --window=250 && \
+	     git repack -f -a -d --depth=2000 --window=1000 && \
 	     git gc --prune=0); \
 	done
 
