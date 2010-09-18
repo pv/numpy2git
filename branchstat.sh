@@ -23,14 +23,16 @@ echo "Unmerged (vs master) commits in branches"
 echo "----------------------------------------"
 
 ALLOK=1
-for branch in `git branch|sort|sed -e s/^..//`; do
-    if test "$branch" = "master"; then
+for branch in `git for-each-ref --format="%(refname)" refs|sort`; do
+    if test "$branch" = "refs/heads/master"; then
 	continue
     fi
-    if expr "$branch" : "crud/.*" > /dev/null; then
-	true
-    else
+    if expr "$branch" : ".*/maintenance/.*" > /dev/null; then
 	continue
+    elif expr "$branch" : ".*/svntags/.*" > /dev/null; then
+	continue
+    else
+	true
     fi
     AHEAD=`git log --oneline master..$branch|wc -l`
     if test -f "$SKIPLIST" && grep -q "^$AHEAD[ \t]*$branch" "$SKIPLIST"; then
