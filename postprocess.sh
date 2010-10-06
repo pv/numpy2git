@@ -6,8 +6,6 @@ REPOBASE=`basename "$REPO"`
 GRAFTS="$2"
 GRAFT_ONLY="$3"
 LOG="$PWD/log-$REPOBASE-postprocess"
-COMMITLIST="$PWD/log-$REPOBASE-commits"
-DROPLIST="$PWD/log-$REPOBASE-dropped"
 
 if test -d "$REPO/.git"; then
     REPOGIT=".git"
@@ -95,8 +93,10 @@ fi
 #
 
 mkdir -p "$REPOGIT"/refs/svn
-mv "$REPOGIT"/refs/heads/crud/* "$REPOGIT"/refs/svn/
-rmdir "$REPOGIT"/refs/heads/crud
+if test -d "$REPOGIT"/refs/heads/crud; then
+    mv "$REPOGIT"/refs/heads/crud/* "$REPOGIT"/refs/svn/
+    rmdir "$REPOGIT"/refs/heads/crud
+fi
 
 for crud in `git branch|grep "^  crud/"`; do
     run git branch -D "$crud"
@@ -112,35 +112,23 @@ for branch in `git branch|grep "^  svntags/"`; do
     run git tag "$tag" "$branch"
 done
 
-mkdir -p "$REPOGIT"/refs/svn/svntags
-mv "$REPOGIT"/refs/heads/svntags/* "$REPOGIT"/refs/svn/svntags/
-rmdir "$REPOGIT"/refs/heads/svntags
+if test -d "$REPOGIT"/refs/heads/svntags; then
+    mkdir -p "$REPOGIT"/refs/svn/svntags
+    mv "$REPOGIT"/refs/heads/svntags/* "$REPOGIT"/refs/svn/svntags/
+    rmdir "$REPOGIT"/refs/heads/svntags
+fi
 
 #
 # 4) Collect garbage
 #
 MAX_REVISION=`git log --all | sed -n -e '/^    svn path/{s/.*revision=//;p}'|sort -n|tail -n1`
 
-run git reflog expire --expire=0
+run git reflog expire --expire=0 --all
 run git prune
 
 
 #
-# 5) List the SVN commits that are left
-#
-
-git log --all | grep 'svn path' > "$COMMITLIST"
-> "$DROPLIST"
-
-(sed -e 's/.*=//' < "$COMMITLIST"; seq 1 $MAX_REVISION) \
-| sort -n | uniq -u > "$DROPLIST"
-
-cat "$DROPLIST" | while read REV; do
-    msg "$REV dropped"
-done
-
-#
-# 6) Strip SVN metadata, and make the grafts permanent
+# 5) Strip SVN metadata, and make the grafts permanent
 #
 
 run git filter-branch --msg-filter 'head -n-2' -- --all
