@@ -71,7 +71,7 @@ final-cleanup:
 gc:
 	for repo in scipy scipy.org; do \
 	    (cd $$repo && \
-	     git repack -f -a -d --depth=2000 --window=1000 && \
+	     git repack -f -a -d --depth=500 --window=250 && \
 	     git gc --prune=0); \
 	done
 
