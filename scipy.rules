@@ -7,9 +7,16 @@ end repository
 create repository scipy.org
 end repository
 
+create repository docs.scipy.org
+end repository
 
 # Trunks
 # ------
+
+match /trunk/doc/frontpage/
+    repository docs.scipy.org
+    branch master
+end match
 
 match /trunk/
     repository scipy
@@ -24,6 +31,13 @@ end match
 
 # Branches
 # --------
+
+# Split off docs.scipy.org
+
+match /branches/([^/]+)/doc/frontpage/
+    repository docs.scipy.org
+    branch \1
+end match
 
 # Release branches
 
@@ -67,6 +81,11 @@ end match
 # Extraneous root paths
 # ---------------------
 
+match /scipy-docs/trunk/frontpage/
+    repository docs.scipy.org
+    branch master
+end match
+
 match /scipy-docs/
     repository scipy
     branch crud/svnroot/scipy-docs
@@ -75,6 +94,13 @@ end match
 
 # Tags
 # ----
+
+# Split off docs.scipy.org
+
+match /tags/([^/]+)/doc/frontpage/
+    repository docs.scipy.org
+    branch svntags/\1
+end match
 
 # Make SVN tags branches, and convert them to tags in a post-processing step
 

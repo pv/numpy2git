@@ -18,7 +18,7 @@ all: clean export postprocess final-cleanup gc
 clean:
 	rm -rf scipy scipy.org scipy.save log-* \
 	    revisions-scipy revisions-scipy.org \
-	    verify-scipy.git
+	    verify-scipy.git docs.scipy.org
 
 svn2git:
 	git clone git://gitorious.org/svn2git/svn2git.git svn2git
@@ -50,6 +50,7 @@ verify: verify-scipy.save verify-scipy.svn
 
 graft:
 	./postprocess.sh scipy scipy.grafts graft-only
+	./postprocess.sh docs.scipy.org docs-scipy-org.grafts graft-only
 	./branchstat.sh scipy scipy.branchskip
 
 branchstat:
@@ -57,19 +58,23 @@ branchstat:
 
 postprocess:
 	./postprocess.sh scipy scipy.grafts
+	./postprocess.sh docs.scipy.org docs-scipy-org.grafts
+	./postprocess.sh scipy.org scipy-org.grafts
 
 final-cleanup:
-	install -d scipy/refs/svn/backups
-	find scipy/refs/backups -type f \
-	| while read F; do \
+	for repo in scipy scipy.org docs.scipy.org; do \
+	    install -d $$repo/refs/svn/backups; \
+	    find $$repo/refs/backups -type f \
+	    | while read F; do \
 		NEWF=`echo "$$F"|sed -e 's@.*/r\([0-9]\+\)/.*/\([^/]\+\)$$@\2_\1@'`; \
-		mv "$$F" scipy/refs/svn/backups/"$$NEWF"; \
+		mv "$$F" $$repo/refs/svn/backups/"$$NEWF"; \
+	    done; \
+	    rm -rf $$repo/refs/original; \
+	    rm -rf $$repo/refs/backups; \
 	done
-	rm -rf scipy/refs/original
-	rm -rf scipy/refs/backups
 
 gc:
-	for repo in scipy scipy.org; do \
+	for repo in scipy scipy.org docs.scipy.org; do \
 	    (cd $$repo && \
 	     git repack -f -a -d --depth=500 --window=250 && \
 	     git gc --prune=0); \
