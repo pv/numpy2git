@@ -19,6 +19,23 @@ fi
 
 cd "$REPO"
 
+MASTER_PARENT=`git rev-list --parents master | grep -v ' ' | tail -n1`
+PARENTLESS=`git rev-list --parents --all | grep -v ' '`
+
+echo ""
+echo "Parentless commits"
+echo "------------------"
+
+for commit in $PARENTLESS; do
+    BRANCHES=""
+    if test "$commit" != "$MASTER_PARENT"; then
+        echo "- $commit"
+    else
+	echo "- $commit (master root)"
+    fi
+done
+
+echo ""
 echo "Unmerged (vs master) commits in branches"
 echo "----------------------------------------"
 
@@ -44,6 +61,7 @@ for branch in `git for-each-ref --format="%(refname)" refs|sort`; do
 	ALLOK=0
     fi
 done
+
 
 if test "$ALLOK" = "1"; then
     echo "All branches fully merged (or skipped)."
