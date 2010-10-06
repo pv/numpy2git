@@ -133,26 +133,24 @@ def do_svn(path, workdir, start_rev=None):
         url = ("file://" +
                os.path.normpath(os.path.abspath(path)).replace(os.path.sep, '/').rstrip('/'))
 
-    branchdirs = {}
+    checkoutdir = os.path.join(workdir, 'repo')
 
     for commit, branch in svn_logreader(url):
         if start_rev is not None and commit > start_rev:
             continue
 
-        if branch not in branchdirs:
-            dirname = branch.replace('/', '-')
-            branchdirs[branch] = os.path.join(workdir, dirname)
+        commiturl = url + '/' + branch + ("@%s" % commit)
+        if not os.path.isdir(checkoutdir):
             svn('checkout', '--ignore-externals', '-q', '-r', str(commit),
-                url + '/' + branch + ("@%s" % commit), branchdirs[branch])
-            os.chdir(branchdirs[branch])
+                commiturl, checkoutdir)
+            os.chdir(checkoutdir)
         else:
-            os.chdir(branchdirs[branch])
+            os.chdir(checkoutdir)
             svn('revert', '-q', '-R', '.')
-            svn('update', '--ignore-externals', '-q', '-r', str(commit))
-            svn('revert', '-q', '-R', '.')
+            svn('switch', '--force', '--ignore-externals', '-q', commiturl)
         subprocess.call([KEYWORD_STRIP_SCRIPT])
 
-        checksum = path_checksum(branchdirs[branch])
+        checksum = path_checksum(checkoutdir)
         print commit, branch, checksum
         sys.stdout.flush()
             
