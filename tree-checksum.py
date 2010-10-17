@@ -14,6 +14,7 @@ import re
 import hashlib
 import shutil
 import subprocess
+import fnmatch
 
 KEYWORD_STRIP_SCRIPT = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                     'svn-kill-keywords.py'))
@@ -24,6 +25,8 @@ def main():
     p.add_option("--all-svn", action="store_true")
     p.add_option("--start-rev", action="store", type="int")
     p.add_option("--compare", action="store_true")
+    p.add_option("--skip", action="append", type="string", dest="skip",
+                 default=[], help="items to skip")
     options, args = p.parse_args()
 
     if options.compare:
@@ -38,11 +41,11 @@ def main():
     path = args[0]
 
     if options.all_git:
-        do_git(path, start_rev=options.start_rev)
+        do_git(path, start_rev=options.start_rev, skip=options.skip)
     elif options.all_svn:
-        do_svn(path, start_rev=options.start_rev)
+        do_svn(path, start_rev=options.start_rev, skip=options.skip)
     else:
-        print path_checksum(path)
+        print path_checksum(path, skip=options.skip)
     sys.exit(0)
 
 def _with_workdir(func):
@@ -105,7 +108,7 @@ def _read_listing(filename):
     return listing
 
 @_with_workdir
-def do_git(path, workdir, start_rev=None):
+def do_git(path, workdir, start_rev=None, skip=None):
     repo = os.path.join(workdir, 'repo')
     git('clone', '--quiet', path, repo)
     os.chdir(repo)
@@ -121,12 +124,12 @@ def do_git(path, workdir, start_rev=None):
 
         git('checkout', '--quiet', commit)
 
-        checksum = path_checksum(repo)
+        checksum = path_checksum(repo, skip=skip)
         print m.group(2), m.group(1), checksum
         sys.stdout.flush()
 
 @_with_workdir
-def do_svn(path, workdir, start_rev=None):
+def do_svn(path, workdir, start_rev=None, skip=None):
     if '://' in path:
         url = path
     else:
@@ -150,7 +153,7 @@ def do_svn(path, workdir, start_rev=None):
             svn('switch', '--force', '--ignore-externals', '-q', commiturl)
         subprocess.call([KEYWORD_STRIP_SCRIPT])
 
-        checksum = path_checksum(checkoutdir)
+        checksum = path_checksum(checkoutdir, skip=skip)
         print commit, branch, checksum
         sys.stdout.flush()
             
@@ -193,8 +196,11 @@ def svn_logreader(url):
                             yield commit, m.group(1)
 
 
-def path_checksum(path):
+def path_checksum(path, skip=None):
     digest = hashlib.sha1()
+
+    if skip is None:
+        skip = []
 
     def feed_file(filename):
         f = open(filename, 'rb')
@@ -220,6 +226,9 @@ def path_checksum(path):
 
         filenames.sort()
         for fn in filenames:
+            fullpath = os.path.join(dirpath, fn)
+            if any(fnmatch.fnmatch(fullpath, pat) for pat in skip):
+                continue
             feed_string(fn)
             feed_file(os.path.join(dirpath, fn))
 
