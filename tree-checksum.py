@@ -16,9 +16,6 @@ import shutil
 import subprocess
 import fnmatch
 
-KEYWORD_STRIP_SCRIPT = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                    'svn-kill-keywords.py'))
-
 def main():
     p = optparse.OptionParser(usage=__doc__.strip())
     p.add_option("--all-git", action="store_true")
@@ -149,9 +146,7 @@ def do_svn(path, workdir, start_rev=None, skip=None):
             os.chdir(checkoutdir)
         else:
             os.chdir(checkoutdir)
-            svn('revert', '-q', '-R', '.')
             svn('switch', '--force', '--ignore-externals', '-q', commiturl)
-        subprocess.call([KEYWORD_STRIP_SCRIPT])
 
         checksum = path_checksum(checkoutdir, skip=skip)
         print commit, branch, checksum
@@ -230,7 +225,12 @@ def path_checksum(path, skip=None):
             if any(fnmatch.fnmatch(fullpath, pat) for pat in skip):
                 continue
             feed_string(fn)
-            feed_file(os.path.join(dirpath, fn))
+
+            svnpath = os.path.join(dirpath, '.svn', 'text-base', fn+'.svn-base')
+            if os.path.isfile(svnpath):
+                feed_file(svnpath)
+            else:
+                feed_file(fullpath)
 
     return digest.hexdigest()
 
