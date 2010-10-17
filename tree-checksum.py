@@ -21,6 +21,7 @@ def main():
     p.add_option("--all-git", action="store_true")
     p.add_option("--all-svn", action="store_true")
     p.add_option("--start-rev", action="store", type="int")
+    p.add_option("--end-rev", action="store", type="int")
     p.add_option("--compare", action="store_true")
     p.add_option("--skip", action="append", type="string", dest="skip",
                  default=[], help="items to skip")
@@ -38,9 +39,9 @@ def main():
     path = args[0]
 
     if options.all_git:
-        do_git(path, start_rev=options.start_rev, skip=options.skip)
+        do_git(path, start_rev=options.start_rev, end_rev=options.end_rev, skip=options.skip)
     elif options.all_svn:
-        do_svn(path, start_rev=options.start_rev, skip=options.skip)
+        do_svn(path, start_rev=options.start_rev, end_rev=options.end_rev, skip=options.skip)
     else:
         print path_checksum(path, skip=options.skip)
     sys.exit(0)
@@ -105,7 +106,7 @@ def _read_listing(filename):
     return listing
 
 @_with_workdir
-def do_git(path, workdir, start_rev=None, skip=None):
+def do_git(path, workdir, start_rev=None, end_rev=None, skip=None):
     repo = os.path.join(workdir, 'repo')
     git('clone', '--quiet', path, repo)
     os.chdir(repo)
@@ -118,6 +119,8 @@ def do_git(path, workdir, start_rev=None, skip=None):
 
         if start_rev is not None and int(m.group(2)) > start_rev:
             continue
+        if end_rev is not None and int(m.group(2)) <= end_rev:
+            break
 
         git('checkout', '--quiet', commit)
 
@@ -126,7 +129,7 @@ def do_git(path, workdir, start_rev=None, skip=None):
         sys.stdout.flush()
 
 @_with_workdir
-def do_svn(path, workdir, start_rev=None, skip=None):
+def do_svn(path, workdir, start_rev=None, end_rev=None, skip=None):
     if '://' in path:
         url = path
     else:
@@ -138,6 +141,8 @@ def do_svn(path, workdir, start_rev=None, skip=None):
     for commit, branch in svn_logreader(url):
         if start_rev is not None and commit > start_rev:
             continue
+        if end_rev is not None and commit <= end_rev:
+            break
 
         commiturl = url + '/' + branch + ("@%s" % commit)
         if not os.path.isdir(checkoutdir):
