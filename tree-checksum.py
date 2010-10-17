@@ -226,7 +226,14 @@ def path_checksum(path, skip=None):
                 continue
             feed_string(fn)
 
-            svnpath = os.path.join(dirpath, '.svn', 'text-base', fn+'.svn-base')
+            seen = {}
+            while os.path.islink(fullpath) and fullpath not in seen:
+                seen[fullpath] = True
+                fullpath = os.path.join(os.path.dirname(fullpath),
+                                        os.readlink(fullpath))
+
+            svnpath = os.path.join(os.path.dirname(fullpath), '.svn', 'text-base',
+                                   os.path.basename(fullpath) + '.svn-base')
             if os.path.isfile(svnpath):
                 feed_file(svnpath)
             else:
