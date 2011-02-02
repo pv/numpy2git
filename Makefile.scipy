@@ -39,14 +39,14 @@ export: svn2git/svn-all-fast-export
 	rm -rf scipy.save
 	cp -a scipy scipy.save
 
-verify-scipy.save:
+verify-scipy.git:
 	./tree-checksum.py --all-git --skip='*/doc/frontpage/*' scipy.save | tee $@
 
 verify-scipy.svn:
 	./tree-checksum.py --all-svn --skip='*/doc/frontpage/*' $(SVN) | tee $@
 
-verify: verify-scipy.save verify-scipy.svn
-	./tree-checksum.py --compare verify-scipy.svn verify-scipy.save
+verify: verify-scipy.git verify-scipy.svn
+	./tree-checksum.py --compare verify-scipy.svn verify-scipy.git
 
 graft:
 	./postprocess.sh scipy scipy.grafts graft-only
