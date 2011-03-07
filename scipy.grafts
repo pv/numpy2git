@@ -3,20 +3,20 @@ trunk:4893				branches/remove_fft_backends:4890
 trunk:4630				branches/stats_models:4629
 trunk:4022				branches/build_with_scons:4010
 trunk:3758				branches/io_new:3755
-trunk:3736				branches/weave_cleanup:3735
+#	trunk:3736				branches/weave_cleanup:3735
 trunk:3822				branches/testing_cleanup:3815
 trunk:5127				scipy-docs:5116
 trunk:5154                              trunk:5081
-trunk:1431				branches/newscipy:1429
+#	trunk:1431				branches/newscipy:1429
 trunk:5671				trunk:5660
 
 branches/io_new:3655			trunk:3652
-branches/mb_mio_refactor:4451		trunk:4450
-branches/mb_mio_refactor:4453		trunk:4450
-branches/oldscipy:1430			trunk:1321
-tags/pre_org:1269                       trunk:1267
+#	branches/mb_mio_refactor:4451		trunk:4450
+#	branches/mb_mio_refactor:4453		trunk:4450
+#	branches/oldscipy:1430			trunk:1321
+#	tags/pre_org:1269                       trunk:1267
 
-branches/weave_cleanup:3735		trunk:3722
+#	branches/weave_cleanup:3735		trunk:3722
 branches/build_with_scons:3976		trunk:3969
 branches/refactor_fft:4858		trunk:4857
 branches/refactor_fft:4846		trunk:4845

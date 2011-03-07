@@ -24,7 +24,7 @@ svn2git:
 	git clone git://gitorious.org/svn2git/svn2git.git svn2git
 
 svn2git/svn-all-fast-export: svn2git
-	cd svn2git && git checkout -f e1bebdeb4 && git clean -f -x
+	cd svn2git && git checkout -f origin/master && git clean -f -x
 	cd svn2git && qmake
 	make -C svn2git
 

@@ -61,6 +61,11 @@ match /branches/(0.8.x)/
     branch maintenance/\1
 end match
 
+match /branches/(0.9.x)/
+    repository scipy
+    branch maintenance/\1
+end match
+
 match /branches/v0_3_2/
   repository scipy
   branch svntags/0.3.2
